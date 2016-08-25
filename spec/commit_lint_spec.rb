@@ -1,40 +1,85 @@
 require File.expand_path('../spec_helper', __FILE__)
 
-module Danger
-  describe Danger::DangerCommitLint do
+class Danger::DangerCommitLint
+  describe 'DangerCommitLint' do
     it 'should be a plugin' do
       expect(Danger::DangerCommitLint.new(nil)).to be_a Danger::Plugin
     end
+  end
 
-    #
-    # You should test your custom attributes and methods here
-    #
-    describe 'with Dangerfile' do
-      before do
-        @dangerfile = testing_dangerfile
-        @my_plugin = @dangerfile.commit_lint
+  describe 'check' do
+    before do
+      @dangerfile = testing_dangerfile
+      @commit_lint = @dangerfile.commit_lint
+    end
+
+    context 'with a long subject line' do
+      it 'adds an error for the subject_line check' do
+        commit = double(:long_commit, message: 'This is a really long subject line and should result in an error')
+        allow(@dangerfile.git).to receive(:commits).and_return([commit])
+
+        @commit_lint.check
+
+        status_report = @commit_lint.status_report
+
+        expect(status_report[:errors].count).to eq 1
+        expect(status_report[:warnings].count).to eq 0
+        expect(status_report[:messages].count).to eq 0
+        expect(status_report[:markdowns].count).to eq 0
+
+        expect(status_report[:errors]).to eq [ERROR_MESSAGES[:subject_length]]
       end
+    end
 
-      # Some examples for writing tests
-      # You should replace these with your own.
+    context 'with a period at the end of the subject line' do
+      it 'adds an error for the subject_period check' do
+        commit = double(:long_commit, message: 'This subject line ends in a period.')
+        allow(@dangerfile.git).to receive(:commits).and_return([commit])
 
-      it 'Warns on a monday' do
-        monday_date = Date.parse('2016-07-11')
-        allow(Date).to receive(:today).and_return monday_date
+        @commit_lint.check
 
-        @my_plugin.warn_on_mondays
+        status_report = @commit_lint.status_report
 
-        warnings = @dangerfile.status_report[:warnings]
-        expect(warnings).to eq(['Trying to merge code on a Monday'])
+        expect(status_report[:errors].count).to eq 1
+        expect(status_report[:warnings].count).to eq 0
+        expect(status_report[:messages].count).to eq 0
+        expect(status_report[:markdowns].count).to eq 0
+
+        expect(status_report[:errors]).to eq [ERROR_MESSAGES[:subject_period]]
       end
+    end
 
-      it 'Does nothing on a tuesday' do
-        monday_date = Date.parse('2016-07-12')
-        allow(Date).to receive(:today).and_return monday_date
+    context 'without an empty line between subject and body' do
+      it 'adds an error for the empty_line check' do
+        commit = double(:long_commit, message: "This subject line is fine\nBut then I forgot the empty line separating the subject and the body.")
+        allow(@dangerfile.git).to receive(:commits).and_return([commit])
 
-        @my_plugin.warn_on_mondays
+        @commit_lint.check
 
-        expect(@dangerfile.status_report[:warnings]).to eq([])
+        status_report = @commit_lint.status_report
+
+        expect(status_report[:errors].count).to eq 1
+        expect(status_report[:warnings].count).to eq 0
+        expect(status_report[:messages].count).to eq 0
+        expect(status_report[:markdowns].count).to eq 0
+
+        expect(status_report[:errors]).to eq [ERROR_MESSAGES[:empty_line]]
+      end
+    end
+
+    context 'with a valid commit message' do
+      it 'does nothing' do
+        commit = double(:valid_commit, message: "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain.")
+        allow(@dangerfile.git).to receive(:commits).and_return([commit])
+
+        @commit_lint.check
+
+        status_report = @commit_lint.status_report
+
+        expect(status_report[:errors].count).to eq 0
+        expect(status_report[:warnings].count).to eq 0
+        expect(status_report[:messages].count).to eq 0
+        expect(status_report[:markdowns].count).to eq 0
       end
     end
   end
