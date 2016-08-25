@@ -18,25 +18,24 @@ module Danger
       # Some examples for writing tests
       # You should replace these with your own.
 
-      it "Warns on a monday" do
-        monday_date = Date.parse("2016-07-11")
+      it 'Warns on a monday' do
+        monday_date = Date.parse('2016-07-11')
         allow(Date).to receive(:today).and_return monday_date
 
         @my_plugin.warn_on_mondays
 
-        expect(@dangerfile.status_report[:warnings]).to eq(["Trying to merge code on a Monday"])
+        warnings = @dangerfile.status_report[:warnings]
+        expect(warnings).to eq(['Trying to merge code on a Monday'])
       end
 
-      it "Does nothing on a tuesday" do
-        monday_date = Date.parse("2016-07-12")
+      it 'Does nothing on a tuesday' do
+        monday_date = Date.parse('2016-07-12')
         allow(Date).to receive(:today).and_return monday_date
 
         @my_plugin.warn_on_mondays
 
         expect(@dangerfile.status_report[:warnings]).to eq([])
       end
-
     end
   end
 end
-

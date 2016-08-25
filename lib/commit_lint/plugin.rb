@@ -17,7 +17,6 @@ module Danger
   # @tags monday, weekends, time, rattata
   #
   class DangerCommitLint < Plugin
-
     # An attribute that you can read/write from your Dangerfile
     #
     # @return   [Array<String>]
