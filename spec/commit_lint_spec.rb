@@ -12,7 +12,7 @@ module Danger
     describe 'with Dangerfile' do
       before do
         @dangerfile = testing_dangerfile
-        @my_plugin = @dangerfile.my_plugin
+        @my_plugin = @dangerfile.commit_lint
       end
 
       # Some examples for writing tests
