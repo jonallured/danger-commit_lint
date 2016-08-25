@@ -1,17 +1,18 @@
-# danger-commit_lint
+# Commit Lint for Danger
 
 [![Build Status](https://travis-ci.org/jonallured/danger-commit_lint.svg?branch=master)](https://travis-ci.org/jonallured/danger-commit_lint)
 
-A description of danger-commit_lint.
+This is a [Danger Plugin][danger] that ensures nice and tidy commit messages.
 
 ## Installation
 
-    $ gem install danger-commit_lint
+```
+$ gem install danger-commit_lint
+```
 
 ## Usage
 
-    Methods and attributes from this plugin are available in
-    your `Dangerfile` under the `commit_lint` namespace.
+TBD
 
 ## Development
 
@@ -20,3 +21,5 @@ A description of danger-commit_lint.
 3. Run `bundle exec rake spec` to run the tests.
 4. Use `bundle exec guard` to automatically have tests run as you make changes.
 5. Make your changes.
+
+[danger]: https://github.com/danger/danger
