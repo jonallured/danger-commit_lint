@@ -4,7 +4,7 @@ module Danger
       subject_length: 'Please limit commit subject line to 50 characters.',
       subject_period: 'Please remove period from end of commit subject line.',
       empty_line: 'Please separate subject from body with newline.'
-    }
+    }.freeze
 
     def check
       for commit in git.commits
