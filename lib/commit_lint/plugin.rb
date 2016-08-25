@@ -8,7 +8,7 @@ module Danger
 
     def check
       for commit in git.commits
-        (subject, empty_line, *body) = commit.message.split("\n")
+        (subject, empty_line) = commit.message.split("\n")
         fail ERROR_MESSAGES[:subject_length] if subject.length > 50
         fail ERROR_MESSAGES[:subject_period] if subject.split('').last == '.'
         fail ERROR_MESSAGES[:empty_line] if empty_line && empty_line.length > 0
