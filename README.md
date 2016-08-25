@@ -1,5 +1,7 @@
 # danger-commit_lint
 
+[![Build Status](https://travis-ci.org/jonallured/danger-commit_lint.svg?branch=master)](https://travis-ci.org/jonallured/danger-commit_lint)
+
 A description of danger-commit_lint.
 
 ## Installation
