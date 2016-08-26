@@ -15,6 +15,8 @@ def report_counts(status_report)
   status_report.values.flatten.count
 end
 
+# rubocop:disable Metrics/ClassLength
+
 module Danger
   class DangerCommitLint
     describe 'DangerCommitLint' do
@@ -149,3 +151,5 @@ module Danger
     end
   end
 end
+
+# rubocop:enable Metrics/ClassLength
