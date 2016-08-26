@@ -1,6 +1,6 @@
 module Danger
   class DangerCommitLint < Plugin
-    class CommitCheck
+    class CommitCheck # :nodoc:
       def self.fail?(message)
         new(message).fail?
       end

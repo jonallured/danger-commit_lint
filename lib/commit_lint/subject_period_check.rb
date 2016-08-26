@@ -1,6 +1,6 @@
 module Danger
   class DangerCommitLint < Plugin
-    class SubjectPeriodCheck < CommitCheck
+    class SubjectPeriodCheck < CommitCheck # :nodoc:
       MESSAGE = 'Please remove period from end of commit subject line.'.freeze
 
       def self.type

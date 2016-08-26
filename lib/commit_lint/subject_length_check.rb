@@ -1,6 +1,6 @@
 module Danger
   class DangerCommitLint < Plugin
-    class SubjectLengthCheck < CommitCheck
+    class SubjectLengthCheck < CommitCheck # :nodoc:
       MESSAGE = 'Please limit commit subject line to 50 characters.'.freeze
 
       def self.type

@@ -1,6 +1,6 @@
 module Danger
   class DangerCommitLint < Plugin
-    class EmptyLineCheck < CommitCheck
+    class EmptyLineCheck < CommitCheck # :nodoc:
       MESSAGE = 'Please separate subject from body with newline.'.freeze
 
       def self.type
