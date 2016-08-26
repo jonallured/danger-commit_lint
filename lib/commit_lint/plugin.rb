@@ -31,7 +31,7 @@ module Danger
     end
 
     def all_checks_disabled?
-      @config[:disable] == :all || disabled_checks.count == 3
+      @config[:disable] == :all || disabled_checks.count == checkers.count
     end
 
     def disabled_checks
