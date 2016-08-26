@@ -17,9 +17,20 @@ module Danger
 
       for commit in git.commits
         (subject, empty_line) = commit.message.split("\n")
-        fail ERROR_MESSAGES[:subject_length] if subject_too_long?(subject)
-        fail ERROR_MESSAGES[:subject_period] if subject_ends_with_period?(subject)
-        fail ERROR_MESSAGES[:empty_line] if missing_empty_line?(empty_line)
+        unless disabled_checks.include? :subject_length
+          subject_length_check = SubjectLengthCheck.new(subject)
+          fail ERROR_MESSAGES[:subject_length] if subject_length_check.fail?
+        end
+
+        unless disabled_checks.include? :subject_period
+          subject_period_check = SubjectPeriodCheck.new(subject)
+          fail ERROR_MESSAGES[:subject_period] if subject_period_check.fail?
+        end
+
+        unless disabled_checks.include? :empty_line
+          empty_line_check = EmptyLineCheck.new(empty_line)
+          fail ERROR_MESSAGES[:empty_line] if empty_line_check.fail?
+        end
       end
     end
 
@@ -33,19 +44,34 @@ module Danger
       @config[:disable] || []
     end
 
-    def subject_too_long?(subject)
-      return false if disabled_checks.include? :subject_length
-      subject.length > 50
+    class SubjectLengthCheck
+      def initialize(subject)
+        @subject = subject
+      end
+
+      def fail?
+        @subject.length > 50
+      end
     end
 
-    def subject_ends_with_period?(subject)
-      return false if disabled_checks.include? :subject_period
-      subject.split('').last == '.'
+    class SubjectPeriodCheck
+      def initialize(subject)
+        @subject = subject
+      end
+
+      def fail?
+        @subject.split('').last == '.'
+      end
     end
 
-    def missing_empty_line?(empty_line)
-      return false if disabled_checks.include?(:empty_line)
-      empty_line && !empty_line.empty?
+    class EmptyLineCheck
+      def initialize(empty_line)
+        @empty_line = empty_line
+      end
+
+      def fail?
+        @empty_line && !@empty_line.empty?
+      end
     end
   end
 end
