@@ -16,25 +16,21 @@ module Danger
       end
 
       for message in messages
-        for (check, klass) in enabled_checks
+        for klass in enabled_checkers
           checker = klass.new(message)
-          fail ERROR_MESSAGES[check] if checker.fail?
+          fail checker.message if checker.fail?
         end
       end
     end
 
     private
 
-    def checks
-      {
-        subject_length: SubjectLengthCheck,
-        subject_period: SubjectPeriodCheck,
-        empty_line: EmptyLineCheck
-      }
+    def checkers
+      [SubjectLengthCheck, SubjectPeriodCheck, EmptyLineCheck]
     end
 
-    def enabled_checks
-      checks.delete_if { |key, _| disabled_checks.include? key }
+    def enabled_checkers
+      checkers.reject { |klass| disabled_checks.include? klass.type }
     end
 
     def all_checks_disabled?
@@ -53,8 +49,15 @@ module Danger
     end
 
     class SubjectLengthCheck
+      attr_reader :message
+
+      def self.type
+        :subject_length
+      end
+
       def initialize(message)
         @subject = message[:subject]
+        @message = ERROR_MESSAGES[:subject_length]
       end
 
       def fail?
@@ -63,8 +66,15 @@ module Danger
     end
 
     class SubjectPeriodCheck
+      attr_reader :message
+
+      def self.type
+        :subject_period
+      end
+
       def initialize(message)
         @subject = message[:subject]
+        @message = ERROR_MESSAGES[:subject_period]
       end
 
       def fail?
@@ -73,8 +83,15 @@ module Danger
     end
 
     class EmptyLineCheck
+      attr_reader :message
+
+      def self.type
+        :empty_line
+      end
+
       def initialize(message)
         @empty_line = message[:empty_line]
+        @message = ERROR_MESSAGES[:empty_line]
       end
 
       def fail?
