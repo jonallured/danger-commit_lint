@@ -12,13 +12,15 @@ module Danger
       before do
         @dangerfile = testing_dangerfile
         @commit_lint = @dangerfile.commit_lint
+        allow(@dangerfile.git).to receive(:commits).and_return([commit])
       end
 
-      context 'with a long subject line' do
-        it 'adds an error for the subject_line check' do
-          commit = double(:long_commit, message: 'This is a really long subject line and should result in an error')
-          allow(@dangerfile.git).to receive(:commits).and_return([commit])
+      let(:commit) { double(:commit, message: message) }
 
+      context 'with a long subject line' do
+        let(:message) { 'This is a really long subject line and should result in an error' }
+
+        it 'adds an error for the subject_line check' do
           @commit_lint.check
 
           status_report = @commit_lint.status_report
@@ -33,10 +35,9 @@ module Danger
       end
 
       context 'with a period at the end of the subject line' do
-        it 'adds an error for the subject_period check' do
-          commit = double(:long_commit, message: 'This subject line ends in a period.')
-          allow(@dangerfile.git).to receive(:commits).and_return([commit])
+        let(:message) { 'This subject line ends in a period.' }
 
+        it 'adds an error for the subject_period check' do
           @commit_lint.check
 
           status_report = @commit_lint.status_report
@@ -51,10 +52,9 @@ module Danger
       end
 
       context 'without an empty line between subject and body' do
-        it 'adds an error for the empty_line check' do
-          commit = double(:long_commit, message: "This subject line is fine\nBut then I forgot the empty line separating the subject and the body.")
-          allow(@dangerfile.git).to receive(:commits).and_return([commit])
+        let(:message) { "This subject line is fine\nBut then I forgot the empty line separating the subject and the body." }
 
+        it 'adds an error for the empty_line check' do
           @commit_lint.check
 
           status_report = @commit_lint.status_report
@@ -69,10 +69,9 @@ module Danger
       end
 
       context 'with a valid commit message' do
-        it 'does nothing' do
-          commit = double(:valid_commit, message: "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain.")
-          allow(@dangerfile.git).to receive(:commits).and_return([commit])
+        let(:message) { "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain." }
 
+        it 'does nothing' do
           @commit_lint.check
 
           status_report = @commit_lint.status_report
