@@ -12,8 +12,7 @@ module Danger
 
       for message in messages
         for klass in enabled_checkers
-          checker = klass.new(message)
-          fail klass::MESSAGE if checker.fail?
+          fail klass::MESSAGE if klass.fail? message
         end
       end
     end
@@ -43,7 +42,13 @@ module Danger
       end
     end
 
-    class SubjectLengthCheck
+    class CommitCheck
+      def self.fail?(message)
+        new(message).fail?
+      end
+    end
+
+    class SubjectLengthCheck < CommitCheck
       MESSAGE = 'Please limit commit subject line to 50 characters.'.freeze
 
       def self.type
@@ -59,7 +64,7 @@ module Danger
       end
     end
 
-    class SubjectPeriodCheck
+    class SubjectPeriodCheck < CommitCheck
       MESSAGE = 'Please remove period from end of commit subject line.'.freeze
 
       def self.type
@@ -75,7 +80,7 @@ module Danger
       end
     end
 
-    class EmptyLineCheck
+    class EmptyLineCheck < CommitCheck
       MESSAGE = 'Please separate subject from body with newline.'.freeze
 
       def self.type
