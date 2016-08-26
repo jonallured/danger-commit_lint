@@ -163,6 +163,23 @@ module Danger
           expect(status_report[:warnings]).to eq [ERROR_MESSAGES[:noop]]
         end
       end
+
+      context 'skipping all checks implicitly' do
+        let(:commit) { double(:commit, message: MESSAGES[:long]) }
+
+        it 'warns that nothing was checked' do
+          @commit_lint.check disable: [:subject_length, :subject_period, :empty_line]
+
+          status_report = @commit_lint.status_report
+
+          expect(status_report[:errors].count).to eq 0
+          expect(status_report[:warnings].count).to eq 1
+          expect(status_report[:messages].count).to eq 0
+          expect(status_report[:markdowns].count).to eq 0
+
+          expect(status_report[:warnings]).to eq [ERROR_MESSAGES[:noop]]
+        end
+      end
     end
   end
 end

@@ -8,12 +8,12 @@ module Danger
     }.freeze
 
     def check(config = {})
-      if config[:disable] == :all
+      @config = config
+
+      if all_checks_disabled?
         warn ERROR_MESSAGES[:noop]
         return
       end
-
-      disabled_checks = config[:disable] || []
 
       for commit in git.commits
         (subject, empty_line) = commit.message.split("\n")
@@ -21,6 +21,16 @@ module Danger
         fail ERROR_MESSAGES[:subject_period] if subject.split('').last == '.' && !disabled_checks.include?(:subject_period)
         fail ERROR_MESSAGES[:empty_line] if empty_line && !empty_line.empty? && !disabled_checks.include?(:empty_line)
       end
+    end
+
+    private
+
+    def all_checks_disabled?
+      @config[:disable] == :all || disabled_checks.count == 3
+    end
+
+    def disabled_checks
+      @config[:disable] || []
     end
   end
 end
