@@ -7,17 +7,20 @@ module Danger
 
       if all_checks_disabled?
         warn NOOP_MESSAGE
-        return
+      else
+        check_messages
       end
+    end
 
+    private
+
+    def check_messages
       for message in messages
         for klass in enabled_checkers
           fail klass::MESSAGE if klass.fail? message
         end
       end
     end
-
-    private
 
     def checkers
       [SubjectLengthCheck, SubjectPeriodCheck, EmptyLineCheck]
