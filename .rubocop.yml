@@ -2,4 +2,4 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 Style/For:
-  Enabled: false
+  EnforcedStyle: for
