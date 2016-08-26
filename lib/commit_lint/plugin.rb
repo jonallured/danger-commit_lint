@@ -16,24 +16,26 @@ module Danger
       end
 
       for message in messages
-        unless disabled_checks.include? :subject_length
-          subject_length_check = SubjectLengthCheck.new(message)
-          fail ERROR_MESSAGES[:subject_length] if subject_length_check.fail?
-        end
-
-        unless disabled_checks.include? :subject_period
-          subject_period_check = SubjectPeriodCheck.new(message)
-          fail ERROR_MESSAGES[:subject_period] if subject_period_check.fail?
-        end
-
-        unless disabled_checks.include? :empty_line
-          empty_line_check = EmptyLineCheck.new(message)
-          fail ERROR_MESSAGES[:empty_line] if empty_line_check.fail?
+        for (check, klass) in enabled_checks
+          checker = klass.new(message)
+          fail ERROR_MESSAGES[check] if checker.fail?
         end
       end
     end
 
     private
+
+    def checks
+      {
+        subject_length: SubjectLengthCheck,
+        subject_period: SubjectPeriodCheck,
+        empty_line: EmptyLineCheck
+      }
+    end
+
+    def enabled_checks
+      checks.delete_if { |key, _| disabled_checks.include? key }
+    end
 
     def all_checks_disabled?
       @config[:disable] == :all || disabled_checks.count == 3
