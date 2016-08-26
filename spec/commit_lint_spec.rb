@@ -26,125 +26,117 @@ module Danger
       end
     end
 
-    describe 'check' do
-      before do
-        @dangerfile = testing_dangerfile
-        @commit_lint = @dangerfile.commit_lint
-        allow(@dangerfile.git).to receive(:commits).and_return([commit])
-      end
+    describe 'check without configuration' do
+      context 'with invalid messages' do
+        it 'fails those checks' do
+          checks = {
+            subject_length: SubjectLengthCheck::MESSAGE,
+            subject_period: SubjectPeriodCheck::MESSAGE,
+            empty_line: EmptyLineCheck::MESSAGE
+          }
 
-      let(:commit) { double(:commit, message: message) }
+          for (check, warning) in checks
+            commit_lint = testing_dangerfile.commit_lint
+            commit = double(:commit, message: TEST_MESSAGES[check])
+            allow(commit_lint.git).to receive(:commits).and_return([commit])
 
-      context 'with a long subject line' do
-        let(:message) { TEST_MESSAGES[:subject_length] }
+            commit_lint.check
 
-        it 'adds an error for the subject_line check' do
-          @commit_lint.check
-
-          status_report = @commit_lint.status_report
-          expect(report_counts(status_report)).to eq 1
-          expect(status_report[:errors]).to eq [SubjectLengthCheck::MESSAGE]
+            status_report = commit_lint.status_report
+            expect(report_counts(status_report)).to eq 1
+            expect(status_report[:errors]).to eq [warning]
+          end
         end
       end
 
-      context 'with a period at the end of the subject line' do
-        let(:message) { TEST_MESSAGES[:subject_period] }
+      context 'with all errors' do
+        it 'fails every check' do
+          commit_lint = testing_dangerfile.commit_lint
+          commit = double(:commit, message: TEST_MESSAGES[:all_errors])
+          allow(commit_lint.git).to receive(:commits).and_return([commit])
 
-        it 'adds an error for the subject_period check' do
-          @commit_lint.check
+          commit_lint.check
 
-          status_report = @commit_lint.status_report
-          expect(report_counts(status_report)).to eq 1
-          expect(status_report[:errors]).to eq [SubjectPeriodCheck::MESSAGE]
+          status_report = commit_lint.status_report
+          expect(report_counts(status_report)).to eq 3
+          expect(status_report[:errors]).to eq [
+            SubjectLengthCheck::MESSAGE,
+            SubjectPeriodCheck::MESSAGE,
+            EmptyLineCheck::MESSAGE
+          ]
         end
       end
 
-      context 'without an empty line between subject and body' do
-        let(:message) { TEST_MESSAGES[:empty_line] }
-
-        it 'adds an error for the empty_line check' do
-          @commit_lint.check
-
-          status_report = @commit_lint.status_report
-          expect(report_counts(status_report)).to eq 1
-          expect(status_report[:errors]).to eq [EmptyLineCheck::MESSAGE]
-        end
-      end
-
-      context 'with a valid commit message' do
-        let(:message) { TEST_MESSAGES[:valid] }
-
+      context 'with valid messages' do
         it 'does nothing' do
-          @commit_lint.check
+          checks = {
+            subject_length: SubjectLengthCheck::MESSAGE,
+            subject_period: SubjectPeriodCheck::MESSAGE,
+            empty_line: EmptyLineCheck::MESSAGE
+          }
 
-          status_report = @commit_lint.status_report
-          expect(report_counts(status_report)).to eq 0
+          for _ in checks
+            commit_lint = testing_dangerfile.commit_lint
+            commit = double(:commit, message: TEST_MESSAGES[:valid])
+            allow(commit_lint.git).to receive(:commits).and_return([commit])
+
+            commit_lint.check
+
+            status_report = commit_lint.status_report
+            expect(report_counts(status_report)).to eq 0
+          end
         end
       end
     end
 
-    describe 'disabling' do
-      before do
-        @dangerfile = testing_dangerfile
-        @commit_lint = @dangerfile.commit_lint
-        allow(@dangerfile.git).to receive(:commits).and_return([commit])
-      end
+    describe 'disable configuration' do
+      context 'with individual checks' do
+        context 'with invalid messages' do
+          it 'does nothing' do
+            checks = {
+              subject_length: SubjectLengthCheck::MESSAGE,
+              subject_period: SubjectPeriodCheck::MESSAGE,
+              empty_line: EmptyLineCheck::MESSAGE
+            }
 
-      let(:commit) { double(:commit, message: message) }
+            for (check, _) in checks
+              commit_lint = testing_dangerfile.commit_lint
+              commit = double(:commit, message: TEST_MESSAGES[check])
+              allow(commit_lint.git).to receive(:commits).and_return([commit])
 
-      context 'skipping subject length check' do
-        let(:message) { TEST_MESSAGES[:subject_length] }
+              commit_lint.check disable: [check]
 
-        it 'does nothing' do
-          @commit_lint.check disable: [:subject_length]
-
-          status_report = @commit_lint.status_report
-          expect(report_counts(status_report)).to eq 0
+              status_report = commit_lint.status_report
+              expect(report_counts(status_report)).to eq 0
+            end
+          end
         end
       end
 
-      context 'skipping subject period check' do
-        let(:message) { TEST_MESSAGES[:subject_period] }
-
-        it 'does nothing' do
-          @commit_lint.check disable: [:subject_period]
-
-          status_report = @commit_lint.status_report
-          expect(report_counts(status_report)).to eq 0
-        end
-      end
-
-      context 'skipping empty line check' do
-        let(:message) { TEST_MESSAGES[:empty_line] }
-
-        it 'does nothing' do
-          @commit_lint.check disable: [:empty_line]
-
-          status_report = @commit_lint.status_report
-          expect(report_counts(status_report)).to eq 0
-        end
-      end
-
-      context 'skipping all checks explicitly' do
-        let(:message) { TEST_MESSAGES[:subject_length] }
-
+      context 'with all checks, implicitly' do
         it 'warns that nothing was checked' do
-          @commit_lint.check disable: :all
+          commit_lint = testing_dangerfile.commit_lint
+          commit = double(:commit, message: TEST_MESSAGES[:all_errors])
+          allow(commit_lint.git).to receive(:commits).and_return([commit])
 
-          status_report = @commit_lint.status_report
+          all_checks = [:subject_length, :subject_period, :empty_line]
+          commit_lint.check disable: all_checks
+
+          status_report = commit_lint.status_report
           expect(report_counts(status_report)).to eq 1
           expect(status_report[:warnings]).to eq [NOOP_MESSAGE]
         end
       end
 
-      context 'skipping all checks implicitly' do
-        let(:message) { TEST_MESSAGES[:subject_length] }
-
+      context 'with all checks, explicitly' do
         it 'warns that nothing was checked' do
-          all_checks = [:subject_length, :subject_period, :empty_line]
-          @commit_lint.check disable: all_checks
+          commit_lint = testing_dangerfile.commit_lint
+          commit = double(:commit, message: TEST_MESSAGES[:all_errors])
+          allow(commit_lint.git).to receive(:commits).and_return([commit])
 
-          status_report = @commit_lint.status_report
+          commit_lint.check disable: :all
+
+          status_report = commit_lint.status_report
           expect(report_counts(status_report)).to eq 1
           expect(status_report[:warnings]).to eq [NOOP_MESSAGE]
         end
@@ -223,6 +215,86 @@ module Danger
             allow(commit_lint.git).to receive(:commits).and_return([commit])
 
             commit_lint.check warn: :all
+
+            status_report = commit_lint.status_report
+            expect(report_counts(status_report)).to eq 0
+          end
+        end
+      end
+    end
+
+    describe 'fail configuration' do
+      context 'with individual checks' do
+        context 'with invalid messages' do
+          it 'fails those checks' do
+            checks = {
+              subject_length: SubjectLengthCheck::MESSAGE,
+              subject_period: SubjectPeriodCheck::MESSAGE,
+              empty_line: EmptyLineCheck::MESSAGE
+            }
+
+            for (check, warning) in checks
+              commit_lint = testing_dangerfile.commit_lint
+              commit = double(:commit, message: TEST_MESSAGES[check])
+              allow(commit_lint.git).to receive(:commits).and_return([commit])
+
+              commit_lint.check fail: [check]
+
+              status_report = commit_lint.status_report
+              expect(report_counts(status_report)).to eq 1
+              expect(status_report[:errors]).to eq [warning]
+            end
+          end
+        end
+
+        context 'with valid messages' do
+          it 'does nothing' do
+            checks = {
+              subject_length: SubjectLengthCheck::MESSAGE,
+              subject_period: SubjectPeriodCheck::MESSAGE,
+              empty_line: EmptyLineCheck::MESSAGE
+            }
+
+            for (check, _) in checks
+              commit_lint = testing_dangerfile.commit_lint
+              commit = double(:commit, message: TEST_MESSAGES[:valid])
+              allow(commit_lint.git).to receive(:commits).and_return([commit])
+
+              commit_lint.check fail: [check]
+
+              status_report = commit_lint.status_report
+              expect(report_counts(status_report)).to eq 0
+            end
+          end
+        end
+      end
+
+      context 'with all checks' do
+        context 'with all errors' do
+          it 'fails those checks' do
+            commit_lint = testing_dangerfile.commit_lint
+            commit = double(:commit, message: TEST_MESSAGES[:all_errors])
+            allow(commit_lint.git).to receive(:commits).and_return([commit])
+
+            commit_lint.check fail: :all
+
+            status_report = commit_lint.status_report
+            expect(report_counts(status_report)).to eq 3
+            expect(status_report[:errors]).to eq [
+              SubjectLengthCheck::MESSAGE,
+              SubjectPeriodCheck::MESSAGE,
+              EmptyLineCheck::MESSAGE
+            ]
+          end
+        end
+
+        context 'with a valid message' do
+          it 'does nothing' do
+            commit_lint = testing_dangerfile.commit_lint
+            commit = double(:commit, message: TEST_MESSAGES[:valid])
+            allow(commit_lint.git).to receive(:commits).and_return([commit])
+
+            commit_lint.check fail: :all
 
             status_report = commit_lint.status_report
             expect(report_counts(status_report)).to eq 0
