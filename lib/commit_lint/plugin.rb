@@ -16,7 +16,11 @@ module Danger
 
     def check_messages
       for message in messages
-        for klass in enabled_checkers
+        for klass in warning_checkers
+          warn klass::MESSAGE if klass.fail? message
+        end
+
+        for klass in failing_checkers
           fail klass::MESSAGE if klass.fail? message
         end
       end
@@ -26,8 +30,20 @@ module Danger
       [SubjectLengthCheck, SubjectPeriodCheck, EmptyLineCheck]
     end
 
+    def checks
+      checkers.map(&:type)
+    end
+
     def enabled_checkers
       checkers.reject { |klass| disabled_checks.include? klass.type }
+    end
+
+    def warning_checkers
+      enabled_checkers.select { |klass| warning_checks.include? klass.type }
+    end
+
+    def failing_checkers
+      enabled_checkers - warning_checkers
     end
 
     def all_checks_disabled?
@@ -36,6 +52,11 @@ module Danger
 
     def disabled_checks
       @config[:disable] || []
+    end
+
+    def warning_checks
+      return checks if @config[:warn] == :all
+      @config[:warn] || []
     end
 
     def messages
