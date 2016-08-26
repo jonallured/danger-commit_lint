@@ -2,10 +2,7 @@ require File.expand_path('../spec_helper', __FILE__)
 
 # rubocop:disable Metrics/LineLength
 
-MESSAGES = {
-  with_period: 'This subject line ends in a period.',
-  long: 'This is a really long subject line and should result in an error',
-  no_empty: "This subject line is fine\nBut then I forgot the empty line separating the subject and the body.",
+TEST_MESSAGES = {
   subject_length: 'This is a really long subject line and should result in an error',
   subject_period: 'This subject line ends in a period.',
   empty_line: "This subject line is fine\nBut then I forgot the empty line separating the subject and the body.",
@@ -39,7 +36,7 @@ module Danger
       let(:commit) { double(:commit, message: message) }
 
       context 'with a long subject line' do
-        let(:message) { MESSAGES[:long] }
+        let(:message) { TEST_MESSAGES[:subject_length] }
 
         it 'adds an error for the subject_line check' do
           @commit_lint.check
@@ -51,7 +48,7 @@ module Danger
       end
 
       context 'with a period at the end of the subject line' do
-        let(:message) { MESSAGES[:with_period] }
+        let(:message) { TEST_MESSAGES[:subject_period] }
 
         it 'adds an error for the subject_period check' do
           @commit_lint.check
@@ -63,7 +60,7 @@ module Danger
       end
 
       context 'without an empty line between subject and body' do
-        let(:message) { MESSAGES[:no_empty] }
+        let(:message) { TEST_MESSAGES[:empty_line] }
 
         it 'adds an error for the empty_line check' do
           @commit_lint.check
@@ -75,7 +72,7 @@ module Danger
       end
 
       context 'with a valid commit message' do
-        let(:message) { MESSAGES[:valid] }
+        let(:message) { TEST_MESSAGES[:valid] }
 
         it 'does nothing' do
           @commit_lint.check
@@ -96,7 +93,7 @@ module Danger
       let(:commit) { double(:commit, message: message) }
 
       context 'skipping subject length check' do
-        let(:message) { MESSAGES[:long] }
+        let(:message) { TEST_MESSAGES[:subject_length] }
 
         it 'does nothing' do
           @commit_lint.check disable: [:subject_length]
@@ -107,7 +104,7 @@ module Danger
       end
 
       context 'skipping subject period check' do
-        let(:message) { MESSAGES[:with_period] }
+        let(:message) { TEST_MESSAGES[:subject_period] }
 
         it 'does nothing' do
           @commit_lint.check disable: [:subject_period]
@@ -118,7 +115,7 @@ module Danger
       end
 
       context 'skipping empty line check' do
-        let(:message) { MESSAGES[:no_empty] }
+        let(:message) { TEST_MESSAGES[:empty_line] }
 
         it 'does nothing' do
           @commit_lint.check disable: [:empty_line]
@@ -129,7 +126,7 @@ module Danger
       end
 
       context 'skipping all checks explicitly' do
-        let(:message) { MESSAGES[:long] }
+        let(:message) { TEST_MESSAGES[:subject_length] }
 
         it 'warns that nothing was checked' do
           @commit_lint.check disable: :all
@@ -141,7 +138,7 @@ module Danger
       end
 
       context 'skipping all checks implicitly' do
-        let(:message) { MESSAGES[:long] }
+        let(:message) { TEST_MESSAGES[:subject_length] }
 
         it 'warns that nothing was checked' do
           all_checks = [:subject_length, :subject_period, :empty_line]
@@ -166,7 +163,7 @@ module Danger
 
             for (check, warning) in checks
               commit_lint = testing_dangerfile.commit_lint
-              commit = double(:commit, message: MESSAGES[check])
+              commit = double(:commit, message: TEST_MESSAGES[check])
               allow(commit_lint.git).to receive(:commits).and_return([commit])
 
               commit_lint.check warn: [check]
@@ -188,7 +185,7 @@ module Danger
 
             for (check, _) in checks
               commit_lint = testing_dangerfile.commit_lint
-              commit = double(:commit, message: MESSAGES[:valid])
+              commit = double(:commit, message: TEST_MESSAGES[:valid])
               allow(commit_lint.git).to receive(:commits).and_return([commit])
 
               commit_lint.check warn: [check]
@@ -204,7 +201,7 @@ module Danger
         context 'with all errors' do
           it 'warns instead of failing' do
             commit_lint = testing_dangerfile.commit_lint
-            commit = double(:commit, message: MESSAGES[:all_errors])
+            commit = double(:commit, message: TEST_MESSAGES[:all_errors])
             allow(commit_lint.git).to receive(:commits).and_return([commit])
 
             commit_lint.check warn: :all
@@ -222,7 +219,7 @@ module Danger
         context 'with a valid message' do
           it 'does nothing' do
             commit_lint = testing_dangerfile.commit_lint
-            commit = double(:commit, message: MESSAGES[:valid])
+            commit = double(:commit, message: TEST_MESSAGES[:valid])
             allow(commit_lint.git).to receive(:commits).and_return([commit])
 
             commit_lint.check warn: :all
