@@ -15,20 +15,19 @@ module Danger
         return
       end
 
-      for commit in git.commits
-        (subject, empty_line) = commit.message.split("\n")
+      for message in messages
         unless disabled_checks.include? :subject_length
-          subject_length_check = SubjectLengthCheck.new(subject)
+          subject_length_check = SubjectLengthCheck.new(message)
           fail ERROR_MESSAGES[:subject_length] if subject_length_check.fail?
         end
 
         unless disabled_checks.include? :subject_period
-          subject_period_check = SubjectPeriodCheck.new(subject)
+          subject_period_check = SubjectPeriodCheck.new(message)
           fail ERROR_MESSAGES[:subject_period] if subject_period_check.fail?
         end
 
         unless disabled_checks.include? :empty_line
-          empty_line_check = EmptyLineCheck.new(empty_line)
+          empty_line_check = EmptyLineCheck.new(message)
           fail ERROR_MESSAGES[:empty_line] if empty_line_check.fail?
         end
       end
@@ -44,9 +43,16 @@ module Danger
       @config[:disable] || []
     end
 
+    def messages
+      git.commits.map do |commit|
+        (subject, empty_line) = commit.message.split("\n")
+        { subject: subject, empty_line: empty_line }
+      end
+    end
+
     class SubjectLengthCheck
-      def initialize(subject)
-        @subject = subject
+      def initialize(message)
+        @subject = message[:subject]
       end
 
       def fail?
@@ -55,8 +61,8 @@ module Danger
     end
 
     class SubjectPeriodCheck
-      def initialize(subject)
-        @subject = subject
+      def initialize(message)
+        @subject = message[:subject]
       end
 
       def fail?
@@ -65,8 +71,8 @@ module Danger
     end
 
     class EmptyLineCheck
-      def initialize(empty_line)
-        @empty_line = empty_line
+      def initialize(message)
+        @empty_line = message[:empty_line]
       end
 
       def fail?
