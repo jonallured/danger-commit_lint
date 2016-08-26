@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = CommitLint::VERSION
   spec.authors       = ['Jon Allured']
   spec.email         = ['jon.allured@gmail.com']
-  spec.description   = %q{A short description of danger-commit_lint.}
-  spec.summary       = %q{A longer description of danger-commit_lint.}
-  spec.homepage      = 'https://github.com/Jon Allured/danger-commit_lint'
+  spec.description   = 'A Danger Plugin that ensures nice and tidy commit messages.'
+  spec.summary       = "A Danger Plugin that ensure commit messages are not too long, don't end in a period and have a line between subject and body"
+  spec.homepage      = 'https://github.com/jonallured/danger-commit_lint'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
