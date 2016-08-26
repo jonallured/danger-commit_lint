@@ -1,24 +1,19 @@
 module Danger
   class DangerCommitLint < Plugin
-    ERROR_MESSAGES = {
-      subject_length: 'Please limit commit subject line to 50 characters.',
-      subject_period: 'Please remove period from end of commit subject line.',
-      empty_line: 'Please separate subject from body with newline.',
-      noop: 'All checks were disabled, nothing to do.'
-    }.freeze
+    NOOP_MESSAGE = 'All checks were disabled, nothing to do.'.freeze
 
     def check(config = {})
       @config = config
 
       if all_checks_disabled?
-        warn ERROR_MESSAGES[:noop]
+        warn NOOP_MESSAGE
         return
       end
 
       for message in messages
         for klass in enabled_checkers
           checker = klass.new(message)
-          fail checker.message if checker.fail?
+          fail klass::MESSAGE if checker.fail?
         end
       end
     end
@@ -49,7 +44,7 @@ module Danger
     end
 
     class SubjectLengthCheck
-      attr_reader :message
+      MESSAGE = 'Please limit commit subject line to 50 characters.'.freeze
 
       def self.type
         :subject_length
@@ -57,7 +52,6 @@ module Danger
 
       def initialize(message)
         @subject = message[:subject]
-        @message = ERROR_MESSAGES[:subject_length]
       end
 
       def fail?
@@ -66,7 +60,7 @@ module Danger
     end
 
     class SubjectPeriodCheck
-      attr_reader :message
+      MESSAGE = 'Please remove period from end of commit subject line.'.freeze
 
       def self.type
         :subject_period
@@ -74,7 +68,6 @@ module Danger
 
       def initialize(message)
         @subject = message[:subject]
-        @message = ERROR_MESSAGES[:subject_period]
       end
 
       def fail?
@@ -83,7 +76,7 @@ module Danger
     end
 
     class EmptyLineCheck
-      attr_reader :message
+      MESSAGE = 'Please separate subject from body with newline.'.freeze
 
       def self.type
         :empty_line
@@ -91,7 +84,6 @@ module Danger
 
       def initialize(message)
         @empty_line = message[:empty_line]
-        @message = ERROR_MESSAGES[:empty_line]
       end
 
       def fail?

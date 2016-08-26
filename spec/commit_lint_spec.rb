@@ -40,7 +40,7 @@ module Danger
 
           status_report = @commit_lint.status_report
           expect(report_counts(status_report)).to eq 1
-          expect(status_report[:errors]).to eq [ERROR_MESSAGES[:subject_length]]
+          expect(status_report[:errors]).to eq [SubjectLengthCheck::MESSAGE]
         end
       end
 
@@ -52,7 +52,7 @@ module Danger
 
           status_report = @commit_lint.status_report
           expect(report_counts(status_report)).to eq 1
-          expect(status_report[:errors]).to eq [ERROR_MESSAGES[:subject_period]]
+          expect(status_report[:errors]).to eq [SubjectPeriodCheck::MESSAGE]
         end
       end
 
@@ -64,7 +64,7 @@ module Danger
 
           status_report = @commit_lint.status_report
           expect(report_counts(status_report)).to eq 1
-          expect(status_report[:errors]).to eq [ERROR_MESSAGES[:empty_line]]
+          expect(status_report[:errors]).to eq [EmptyLineCheck::MESSAGE]
         end
       end
 
@@ -130,7 +130,7 @@ module Danger
 
           status_report = @commit_lint.status_report
           expect(report_counts(status_report)).to eq 1
-          expect(status_report[:warnings]).to eq [ERROR_MESSAGES[:noop]]
+          expect(status_report[:warnings]).to eq [NOOP_MESSAGE]
         end
       end
 
@@ -143,7 +143,7 @@ module Danger
 
           status_report = @commit_lint.status_report
           expect(report_counts(status_report)).to eq 1
-          expect(status_report[:warnings]).to eq [ERROR_MESSAGES[:noop]]
+          expect(status_report[:warnings]).to eq [NOOP_MESSAGE]
         end
       end
     end
