@@ -11,6 +11,10 @@ MESSAGES = {
 
 # rubocop:enable Metrics/LineLength
 
+def report_counts(status_report)
+  status_report.values.flatten.count
+end
+
 module Danger
   class DangerCommitLint
     describe 'DangerCommitLint' do
@@ -35,12 +39,7 @@ module Danger
           @commit_lint.check
 
           status_report = @commit_lint.status_report
-
-          expect(status_report[:errors].count).to eq 1
-          expect(status_report[:warnings].count).to eq 0
-          expect(status_report[:messages].count).to eq 0
-          expect(status_report[:markdowns].count).to eq 0
-
+          expect(report_counts(status_report)).to eq 1
           expect(status_report[:errors]).to eq [ERROR_MESSAGES[:subject_length]]
         end
       end
@@ -52,12 +51,7 @@ module Danger
           @commit_lint.check
 
           status_report = @commit_lint.status_report
-
-          expect(status_report[:errors].count).to eq 1
-          expect(status_report[:warnings].count).to eq 0
-          expect(status_report[:messages].count).to eq 0
-          expect(status_report[:markdowns].count).to eq 0
-
+          expect(report_counts(status_report)).to eq 1
           expect(status_report[:errors]).to eq [ERROR_MESSAGES[:subject_period]]
         end
       end
@@ -69,12 +63,7 @@ module Danger
           @commit_lint.check
 
           status_report = @commit_lint.status_report
-
-          expect(status_report[:errors].count).to eq 1
-          expect(status_report[:warnings].count).to eq 0
-          expect(status_report[:messages].count).to eq 0
-          expect(status_report[:markdowns].count).to eq 0
-
+          expect(report_counts(status_report)).to eq 1
           expect(status_report[:errors]).to eq [ERROR_MESSAGES[:empty_line]]
         end
       end
@@ -86,11 +75,7 @@ module Danger
           @commit_lint.check
 
           status_report = @commit_lint.status_report
-
-          expect(status_report[:errors].count).to eq 0
-          expect(status_report[:warnings].count).to eq 0
-          expect(status_report[:messages].count).to eq 0
-          expect(status_report[:markdowns].count).to eq 0
+          expect(report_counts(status_report)).to eq 0
         end
       end
     end
@@ -109,11 +94,7 @@ module Danger
           @commit_lint.check disable: [:subject_length]
 
           status_report = @commit_lint.status_report
-
-          expect(status_report[:errors].count).to eq 0
-          expect(status_report[:warnings].count).to eq 0
-          expect(status_report[:messages].count).to eq 0
-          expect(status_report[:markdowns].count).to eq 0
+          expect(report_counts(status_report)).to eq 0
         end
       end
 
@@ -124,11 +105,7 @@ module Danger
           @commit_lint.check disable: [:subject_period]
 
           status_report = @commit_lint.status_report
-
-          expect(status_report[:errors].count).to eq 0
-          expect(status_report[:warnings].count).to eq 0
-          expect(status_report[:messages].count).to eq 0
-          expect(status_report[:markdowns].count).to eq 0
+          expect(report_counts(status_report)).to eq 0
         end
       end
 
@@ -139,11 +116,7 @@ module Danger
           @commit_lint.check disable: [:empty_line]
 
           status_report = @commit_lint.status_report
-
-          expect(status_report[:errors].count).to eq 0
-          expect(status_report[:warnings].count).to eq 0
-          expect(status_report[:messages].count).to eq 0
-          expect(status_report[:markdowns].count).to eq 0
+          expect(report_counts(status_report)).to eq 0
         end
       end
 
@@ -154,12 +127,7 @@ module Danger
           @commit_lint.check disable: :all
 
           status_report = @commit_lint.status_report
-
-          expect(status_report[:errors].count).to eq 0
-          expect(status_report[:warnings].count).to eq 1
-          expect(status_report[:messages].count).to eq 0
-          expect(status_report[:markdowns].count).to eq 0
-
+          expect(report_counts(status_report)).to eq 1
           expect(status_report[:warnings]).to eq [ERROR_MESSAGES[:noop]]
         end
       end
@@ -172,12 +140,7 @@ module Danger
           @commit_lint.check disable: all_checks
 
           status_report = @commit_lint.status_report
-
-          expect(status_report[:errors].count).to eq 0
-          expect(status_report[:warnings].count).to eq 1
-          expect(status_report[:messages].count).to eq 0
-          expect(status_report[:markdowns].count).to eq 0
-
+          expect(report_counts(status_report)).to eq 1
           expect(status_report[:warnings]).to eq [ERROR_MESSAGES[:noop]]
         end
       end
