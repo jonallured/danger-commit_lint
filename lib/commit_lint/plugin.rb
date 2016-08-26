@@ -53,13 +53,11 @@ module Danger
     def check_messages
       for message in messages
         for klass in warning_checkers
-          warn klass::MESSAGE if klass.fail? message
+          messaging.warn klass::MESSAGE if klass.fail? message
         end
 
         for klass in failing_checkers
-          # rubocop:disable Style/SignalException
-          fail klass::MESSAGE if klass.fail? message
-          # rubocop:enable Style/SignalException
+          messaging.fail klass::MESSAGE if klass.fail? message
         end
       end
     end
