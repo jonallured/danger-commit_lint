@@ -1,1 +1,5 @@
+require 'commit_lint/commit_check'
+require 'commit_lint/subject_length_check'
+require 'commit_lint/subject_period_check'
+require 'commit_lint/empty_line_check'
 require 'commit_lint/plugin'
