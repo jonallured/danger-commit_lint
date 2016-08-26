@@ -94,5 +94,75 @@ module Danger
         end
       end
     end
+
+    describe 'disabling' do
+      before do
+        @dangerfile = testing_dangerfile
+        @commit_lint = @dangerfile.commit_lint
+        allow(@dangerfile.git).to receive(:commits).and_return([commit])
+      end
+
+      context 'skipping subject length with a long subject' do
+        let(:commit) { double(:commit, message: MESSAGES[:long]) }
+
+        it 'does nothing' do
+          @commit_lint.check disable: [:subject_length]
+
+          status_report = @commit_lint.status_report
+
+          expect(status_report[:errors].count).to eq 0
+          expect(status_report[:warnings].count).to eq 0
+          expect(status_report[:messages].count).to eq 0
+          expect(status_report[:markdowns].count).to eq 0
+        end
+      end
+
+      context 'skipping subject length with a long subject' do
+        let(:commit) { double(:commit, message: MESSAGES[:with_period]) }
+
+        it 'does nothing' do
+          @commit_lint.check disable: [:subject_period]
+
+          status_report = @commit_lint.status_report
+
+          expect(status_report[:errors].count).to eq 0
+          expect(status_report[:warnings].count).to eq 0
+          expect(status_report[:messages].count).to eq 0
+          expect(status_report[:markdowns].count).to eq 0
+        end
+      end
+
+      context 'skipping empty line without an empty line' do
+        let(:commit) { double(:commit, message: MESSAGES[:no_empty]) }
+
+        it 'does nothing' do
+          @commit_lint.check disable: [:empty_line]
+
+          status_report = @commit_lint.status_report
+
+          expect(status_report[:errors].count).to eq 0
+          expect(status_report[:warnings].count).to eq 0
+          expect(status_report[:messages].count).to eq 0
+          expect(status_report[:markdowns].count).to eq 0
+        end
+      end
+
+      context 'skipping all checks explicitly' do
+        let(:commit) { double(:commit, message: MESSAGES[:long]) }
+
+        it 'warns that nothing was checked' do
+          @commit_lint.check disable: :all
+
+          status_report = @commit_lint.status_report
+
+          expect(status_report[:errors].count).to eq 0
+          expect(status_report[:warnings].count).to eq 1
+          expect(status_report[:messages].count).to eq 0
+          expect(status_report[:markdowns].count).to eq 0
+
+          expect(status_report[:warnings]).to eq [ERROR_MESSAGES[:noop]]
+        end
+      end
+    end
   end
 end
