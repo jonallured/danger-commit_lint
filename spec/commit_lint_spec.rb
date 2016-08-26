@@ -1,5 +1,16 @@
 require File.expand_path('../spec_helper', __FILE__)
 
+# rubocop:disable Metrics/LineLength
+
+MESSAGES = {
+  with_period: 'This subject line ends in a period.',
+  long: 'This is a really long subject line and should result in an error',
+  no_empty: "This subject line is fine\nBut then I forgot the empty line separating the subject and the body.",
+  valid:  "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain."
+}.freeze
+
+# rubocop:enable Metrics/LineLength
+
 module Danger
   class DangerCommitLint
     describe 'DangerCommitLint' do
@@ -18,7 +29,7 @@ module Danger
       let(:commit) { double(:commit, message: message) }
 
       context 'with a long subject line' do
-        let(:message) { 'This is a really long subject line and should result in an error' } # rubocop:disable Metrics/LineLength
+        let(:message) { MESSAGES[:long] }
 
         it 'adds an error for the subject_line check' do
           @commit_lint.check
@@ -35,7 +46,7 @@ module Danger
       end
 
       context 'with a period at the end of the subject line' do
-        let(:message) { 'This subject line ends in a period.' }
+        let(:message) { MESSAGES[:with_period] }
 
         it 'adds an error for the subject_period check' do
           @commit_lint.check
@@ -52,7 +63,7 @@ module Danger
       end
 
       context 'without an empty line between subject and body' do
-        let(:message) { "This subject line is fine\nBut then I forgot the empty line separating the subject and the body." } # rubocop:disable Metrics/LineLength
+        let(:message) { MESSAGES[:no_empty] }
 
         it 'adds an error for the empty_line check' do
           @commit_lint.check
@@ -69,7 +80,7 @@ module Danger
       end
 
       context 'with a valid commit message' do
-        let(:message) { "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain." } # rubocop:disable Metrics/LineLength
+        let(:message) { MESSAGES[:valid] }
 
         it 'does nothing' do
           @commit_lint.check
