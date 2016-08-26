@@ -18,7 +18,7 @@ module Danger
       let(:commit) { double(:commit, message: message) }
 
       context 'with a long subject line' do
-        let(:message) { 'This is a really long subject line and should result in an error' }
+        let(:message) { 'This is a really long subject line and should result in an error' } # rubocop:disable Metrics/LineLength
 
         it 'adds an error for the subject_line check' do
           @commit_lint.check
@@ -52,7 +52,7 @@ module Danger
       end
 
       context 'without an empty line between subject and body' do
-        let(:message) { "This subject line is fine\nBut then I forgot the empty line separating the subject and the body." }
+        let(:message) { "This subject line is fine\nBut then I forgot the empty line separating the subject and the body." } # rubocop:disable Metrics/LineLength
 
         it 'adds an error for the empty_line check' do
           @commit_lint.check
@@ -69,7 +69,7 @@ module Danger
       end
 
       context 'with a valid commit message' do
-        let(:message) { "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain." }
+        let(:message) { "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain." } # rubocop:disable Metrics/LineLength
 
         it 'does nothing' do
           @commit_lint.check
