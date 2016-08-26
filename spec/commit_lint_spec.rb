@@ -168,7 +168,8 @@ module Danger
         let(:commit) { double(:commit, message: MESSAGES[:long]) }
 
         it 'warns that nothing was checked' do
-          @commit_lint.check disable: [:subject_length, :subject_period, :empty_line]
+          all_checks = [:subject_length, :subject_period, :empty_line]
+          @commit_lint.check disable: all_checks
 
           status_report = @commit_lint.status_report
 
