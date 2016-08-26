@@ -20,24 +20,10 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'danger', '~>3.0'
 
-  # General ruby development
   spec.add_development_dependency 'bundler', '~> 1.3'
   spec.add_development_dependency 'rake', '~> 10.0'
-
-  # Testing support
   spec.add_development_dependency 'rspec', '~> 3.4'
-
-  # Linting code and docs
   spec.add_development_dependency "rubocop", "~> 0.41"
   spec.add_development_dependency "yard", "~> 0.8"
-
-  # If you want to work on older builds of ruby
-  spec.add_development_dependency 'listen', '3.0.7'
-
-  # This gives you the chance to run a REPL inside your test
-  # via
-  #    require 'pry'
-  #    binding.pry
-  # This will stop test execution and let you inspect the results
   spec.add_development_dependency 'pry'
 end
