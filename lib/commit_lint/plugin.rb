@@ -21,7 +21,9 @@ module Danger
         end
 
         for klass in failing_checkers
+          # rubocop:disable Style/SignalException
           fail klass::MESSAGE if klass.fail? message
+          # rubocop:enable Style/SignalException
         end
       end
     end
