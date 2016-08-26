@@ -87,8 +87,10 @@ module Danger
         allow(@dangerfile.git).to receive(:commits).and_return([commit])
       end
 
-      context 'skipping subject length with a long subject' do
-        let(:commit) { double(:commit, message: MESSAGES[:long]) }
+      let(:commit) { double(:commit, message: message) }
+
+      context 'skipping subject length check' do
+        let(:message) { MESSAGES[:long] }
 
         it 'does nothing' do
           @commit_lint.check disable: [:subject_length]
@@ -98,8 +100,8 @@ module Danger
         end
       end
 
-      context 'skipping subject length with a long subject' do
-        let(:commit) { double(:commit, message: MESSAGES[:with_period]) }
+      context 'skipping subject period check' do
+        let(:message) { MESSAGES[:with_period] }
 
         it 'does nothing' do
           @commit_lint.check disable: [:subject_period]
@@ -109,8 +111,8 @@ module Danger
         end
       end
 
-      context 'skipping empty line without an empty line' do
-        let(:commit) { double(:commit, message: MESSAGES[:no_empty]) }
+      context 'skipping empty line check' do
+        let(:message) { MESSAGES[:no_empty] }
 
         it 'does nothing' do
           @commit_lint.check disable: [:empty_line]
@@ -121,7 +123,7 @@ module Danger
       end
 
       context 'skipping all checks explicitly' do
-        let(:commit) { double(:commit, message: MESSAGES[:long]) }
+        let(:message) { MESSAGES[:long] }
 
         it 'warns that nothing was checked' do
           @commit_lint.check disable: :all
@@ -133,7 +135,7 @@ module Danger
       end
 
       context 'skipping all checks implicitly' do
-        let(:commit) { double(:commit, message: MESSAGES[:long]) }
+        let(:message) { MESSAGES[:long] }
 
         it 'warns that nothing was checked' do
           all_checks = [:subject_length, :subject_period, :empty_line]
