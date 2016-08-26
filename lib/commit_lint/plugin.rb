@@ -1,7 +1,43 @@
 module Danger
+  # Run each commit in the PR through a message linting.
+  #
+  # @example Lint all commits using defaults
+  #
+  #          commit_lint.check
+  #
+  # @example Warn instead of fail
+  #
+  #          commit_lint.check warn: :all
+  #
+  # @example Disable a particular check
+  #
+  #          commit_lint.check disable: [:subject_period]
+  #
+  # @see danger/danger
+  # @tags commit linting
+  #
   class DangerCommitLint < Plugin
     NOOP_MESSAGE = 'All checks were disabled, nothing to do.'.freeze
 
+    # Checks the commits with whatever config the user passes.
+    #
+    # @param [Hash] config
+    #        This hash can contain the following keys:
+    #
+    #        * `disable` - array of checks to skip
+    #        * `fail` - array of checks to fail on
+    #        * `warn` - array of checks to warn on
+    #
+    #        The current check types are:
+    #
+    #        * `subject_length`
+    #        * `subject_period`
+    #        * `empty_line`
+    #
+    #        Note: you can pass :all instead of an array to target all checks.
+    #
+    # @return [void]
+    #
     def check(config = {})
       @config = config
 
