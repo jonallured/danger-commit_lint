@@ -17,9 +17,9 @@ module Danger
 
       for commit in git.commits
         (subject, empty_line) = commit.message.split("\n")
-        fail ERROR_MESSAGES[:subject_length] if subject.length > 50 && !disabled_checks.include?(:subject_length)
-        fail ERROR_MESSAGES[:subject_period] if subject.split('').last == '.' && !disabled_checks.include?(:subject_period)
-        fail ERROR_MESSAGES[:empty_line] if empty_line && !empty_line.empty? && !disabled_checks.include?(:empty_line)
+        fail ERROR_MESSAGES[:subject_length] if subject_too_long?(subject)
+        fail ERROR_MESSAGES[:subject_period] if subject_ends_with_period?(subject)
+        fail ERROR_MESSAGES[:empty_line] if missing_empty_line?(empty_line)
       end
     end
 
@@ -31,6 +31,21 @@ module Danger
 
     def disabled_checks
       @config[:disable] || []
+    end
+
+    def subject_too_long?(subject)
+      return false if disabled_checks.include? :subject_length
+      subject.length > 50
+    end
+
+    def subject_ends_with_period?(subject)
+      return false if disabled_checks.include? :subject_period
+      subject.split('').last == '.'
+    end
+
+    def missing_empty_line?(empty_line)
+      return false if disabled_checks.include?(:empty_line)
+      empty_line && !empty_line.empty?
     end
   end
 end
