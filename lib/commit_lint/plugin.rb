@@ -42,7 +42,7 @@ module Danger
       @config = config
 
       if all_checks_disabled?
-        warn NOOP_MESSAGE
+        messaging.warn NOOP_MESSAGE
       else
         check_messages
       end
