@@ -4,6 +4,8 @@
 
 This is a [Danger Plugin][danger] that ensures nice and tidy commit messages.
 
+[danger]: https://github.com/danger/danger
+
 ## Installation
 
 ```
@@ -61,13 +63,3 @@ commit_lint.check disable: :all
 ```
 
 This will actually throw a warning that Commit Lint isn't doing anything.
-
-## Development
-
-1. Clone this repo
-2. Run `bundle install` to setup dependencies.
-3. Run `bundle exec rake spec` to run the tests.
-4. Use `bundle exec guard` to automatically have tests run as you make changes.
-5. Make your changes.
-
-[danger]: https://github.com/danger/danger
