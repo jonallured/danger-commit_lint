@@ -30,6 +30,7 @@ module Danger
     #
     #        The current check types are:
     #
+    #        * `subject_cap`
     #        * `subject_length`
     #        * `subject_period`
     #        * `empty_line`
