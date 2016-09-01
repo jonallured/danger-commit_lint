@@ -63,7 +63,7 @@ module Danger
     end
 
     def checkers
-      [SubjectLengthCheck, SubjectPeriodCheck, EmptyLineCheck]
+      [SubjectCapCheck, SubjectLengthCheck, SubjectPeriodCheck, EmptyLineCheck]
     end
 
     def checks

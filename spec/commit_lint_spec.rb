@@ -3,10 +3,11 @@ require File.expand_path('../spec_helper', __FILE__)
 # rubocop:disable Metrics/LineLength
 
 TEST_MESSAGES = {
+  subject_cap: 'this subject needs a capital',
   subject_length: 'This is a really long subject line and should result in an error',
   subject_period: 'This subject line ends in a period.',
   empty_line: "This subject line is fine\nBut then I forgot the empty line separating the subject and the body.",
-  all_errors: "This is a really long subject and it even ends in a period.\nNot to mention the missing empty line!",
+  all_errors: "this is a really long subject and it even ends in a period.\nNot to mention the missing empty line!",
   valid:  "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain."
 }.freeze
 
@@ -30,6 +31,7 @@ module Danger
       context 'with invalid messages' do
         it 'fails those checks' do
           checks = {
+            subject_cap: SubjectCapCheck::MESSAGE,
             subject_length: SubjectLengthCheck::MESSAGE,
             subject_period: SubjectPeriodCheck::MESSAGE,
             empty_line: EmptyLineCheck::MESSAGE
@@ -58,8 +60,9 @@ module Danger
           commit_lint.check
 
           status_report = commit_lint.status_report
-          expect(report_counts(status_report)).to eq 3
+          expect(report_counts(status_report)).to eq 4
           expect(status_report[:errors]).to eq [
+            SubjectCapCheck::MESSAGE,
             SubjectLengthCheck::MESSAGE,
             SubjectPeriodCheck::MESSAGE,
             EmptyLineCheck::MESSAGE
@@ -119,7 +122,9 @@ module Danger
           commit = double(:commit, message: TEST_MESSAGES[:all_errors])
           allow(commit_lint.git).to receive(:commits).and_return([commit])
 
-          all_checks = [:subject_length, :subject_period, :empty_line]
+          all_checks = [
+            :subject_cap, :subject_length, :subject_period, :empty_line
+          ]
           commit_lint.check disable: all_checks
 
           status_report = commit_lint.status_report
@@ -199,8 +204,9 @@ module Danger
             commit_lint.check warn: :all
 
             status_report = commit_lint.status_report
-            expect(report_counts(status_report)).to eq 3
+            expect(report_counts(status_report)).to eq 4
             expect(status_report[:warnings]).to eq [
+              SubjectCapCheck::MESSAGE,
               SubjectLengthCheck::MESSAGE,
               SubjectPeriodCheck::MESSAGE,
               EmptyLineCheck::MESSAGE
@@ -279,8 +285,9 @@ module Danger
             commit_lint.check fail: :all
 
             status_report = commit_lint.status_report
-            expect(report_counts(status_report)).to eq 3
+            expect(report_counts(status_report)).to eq 4
             expect(status_report[:errors]).to eq [
+              SubjectCapCheck::MESSAGE,
               SubjectLengthCheck::MESSAGE,
               SubjectPeriodCheck::MESSAGE,
               EmptyLineCheck::MESSAGE
