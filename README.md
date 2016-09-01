@@ -56,7 +56,7 @@ commit_lint.check fail: :all
 Also note that there is one more way that Commit Lint can behave:
 
 ```ruby
-commit_lint.check diable: :all
+commit_lint.check disable: :all
 ```
 
 This will actually throw a warning that Commit Lint isn't doing anything.
