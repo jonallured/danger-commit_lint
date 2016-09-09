@@ -1,6 +1,16 @@
 module Danger
   # Run each commit in the PR through a message linting.
   #
+  #  Commit lint will check each commit in the PR to ensure the following is true:
+  #
+  #  * Commit subject begins with a capital letter (`subject_cap`)
+  #  * Commit subject is no longer than 50 characters (`subject_length`)
+  #  * Commit subject does not end in a period (`subject_period`)
+  #  * Commit subject and body are separated by an empty line (`empty_line`)
+  #
+  #  By default, Commit Lint fails, but you can configure this behavior.
+  #
+  #
   # @example Lint all commits using defaults
   #
   #          commit_lint.check
@@ -21,21 +31,22 @@ module Danger
 
     # Checks the commits with whatever config the user passes.
     #
+    # Passing in a hash which contain the following keys:
+    #
+    #  * `disable` - array of checks to skip
+    #  * `fail` - array of checks to fail on
+    #  * `warn` - array of checks to warn on
+    #
+    #  The current check types are:
+    #
+    #  * `subject_cap`
+    #  * `subject_length`
+    #  * `subject_period`
+    #  * `empty_line`
+    #
+    #  Note: you can pass :all instead of an array to target all checks.
+    #
     # @param [Hash] config
-    #        This hash can contain the following keys:
-    #
-    #        * `disable` - array of checks to skip
-    #        * `fail` - array of checks to fail on
-    #        * `warn` - array of checks to warn on
-    #
-    #        The current check types are:
-    #
-    #        * `subject_cap`
-    #        * `subject_length`
-    #        * `subject_period`
-    #        * `empty_line`
-    #
-    #        Note: you can pass :all instead of an array to target all checks.
     #
     # @return [void]
     #
