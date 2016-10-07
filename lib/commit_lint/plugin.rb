@@ -1,7 +1,8 @@
 module Danger
   # Run each commit in the PR through a message linting.
   #
-  #  Commit lint will check each commit in the PR to ensure the following is true:
+  #  Commit lint will check each commit in the PR to ensure the following is
+  #  true:
   #
   #  * Commit subject begins with a capital letter (`subject_cap`)
   #  * Commit subject is no longer than 50 characters (`subject_length`)
