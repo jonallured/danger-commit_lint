@@ -3,8 +3,13 @@
 [![Build Status](https://travis-ci.org/jonallured/danger-commit_lint.svg?branch=master)](https://travis-ci.org/jonallured/danger-commit_lint)
 
 This is a [Danger Plugin][danger] that ensures nice and tidy commit messages.
+The checks performed on each commit message are inspired by [Tim Pope's blog
+post][tpope] on good commit messages, echoed by [git's own documentation][book]
+on the subject.
 
 [danger]: http://danger.systems/plugins/commit_lint.html
+[tpope]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+[book]: https://www.git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project#Commit-Guidelines
 
 ## Installation
 
