@@ -9,6 +9,7 @@ task default: [:spec, :rubocop, :spec_docs]
 desc 'Run RuboCop on the lib/specs directory'
 RuboCop::RakeTask.new(:rubocop) do |task|
   task.patterns = ['lib/**/*.rb', 'spec/**/*.rb']
+  task.options = ['--display-cop-names']
 end
 
 desc 'Ensure that the plugin passes `danger plugins lint`'
