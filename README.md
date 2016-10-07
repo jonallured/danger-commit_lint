@@ -4,7 +4,7 @@
 
 This is a [Danger Plugin][danger] that ensures nice and tidy commit messages.
 
-[danger]: https://github.com/danger/danger
+[danger]: http://danger.systems/plugins/commit_lint.html
 
 ## Installation
 
