@@ -10,3 +10,9 @@ rvm:
 
 script:
     - bundle exec rake
+
+notifications:
+  email: false
+  webhooks:
+    urls:
+      - https://uplink-app.herokuapp.com/travis_hooks
