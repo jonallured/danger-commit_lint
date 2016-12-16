@@ -66,11 +66,11 @@ module Danger
     def check_messages
       for message in messages
         for klass in warning_checkers
-          messaging.warn klass::MESSAGE if klass.fail? message
+          issue_warning klass::MESSAGE if klass.fail? message
         end
 
         for klass in failing_checkers
-          messaging.fail klass::MESSAGE if klass.fail? message
+          issue_failure klass::MESSAGE if klass.fail? message
         end
       end
     end
@@ -113,6 +113,14 @@ module Danger
         (subject, empty_line) = commit.message.split("\n")
         { subject: subject, empty_line: empty_line }
       end
+    end
+
+    def issue_warning(message)
+      messaging.warn message
+    end
+
+    def issue_failure(message)
+      messaging.fail message
     end
   end
 end
