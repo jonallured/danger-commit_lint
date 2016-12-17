@@ -28,6 +28,8 @@ module Danger
     end
 
     describe 'check without configuration' do
+      let(:commit) { double(:commit, message: message) }
+
       context 'with invalid messages' do
         it 'fails those checks' do
           checks = {
@@ -52,9 +54,10 @@ module Danger
       end
 
       context 'with all errors' do
+        let(:message) { TEST_MESSAGES[:all_errors] }
+
         it 'fails every check' do
           commit_lint = testing_dangerfile.commit_lint
-          commit = double(:commit, message: TEST_MESSAGES[:all_errors])
           allow(commit_lint.git).to receive(:commits).and_return([commit])
 
           commit_lint.check
@@ -71,6 +74,8 @@ module Danger
       end
 
       context 'with valid messages' do
+        let(:message) { TEST_MESSAGES[:valid] }
+
         it 'does nothing' do
           checks = {
             subject_length: SubjectLengthCheck::MESSAGE,
@@ -80,7 +85,6 @@ module Danger
 
           for _ in checks
             commit_lint = testing_dangerfile.commit_lint
-            commit = double(:commit, message: TEST_MESSAGES[:valid])
             allow(commit_lint.git).to receive(:commits).and_return([commit])
 
             commit_lint.check
@@ -93,6 +97,8 @@ module Danger
     end
 
     describe 'disable configuration' do
+      let(:commit) { double(:commit, message: message) }
+
       context 'with individual checks' do
         context 'with invalid messages' do
           it 'does nothing' do
@@ -117,9 +123,10 @@ module Danger
       end
 
       context 'with all checks, implicitly' do
+        let(:message) { TEST_MESSAGES[:all_errors] }
+
         it 'warns that nothing was checked' do
           commit_lint = testing_dangerfile.commit_lint
-          commit = double(:commit, message: TEST_MESSAGES[:all_errors])
           allow(commit_lint.git).to receive(:commits).and_return([commit])
 
           all_checks = [
@@ -134,9 +141,10 @@ module Danger
       end
 
       context 'with all checks, explicitly' do
+        let(:message) { TEST_MESSAGES[:all_errors] }
+
         it 'warns that nothing was checked' do
           commit_lint = testing_dangerfile.commit_lint
-          commit = double(:commit, message: TEST_MESSAGES[:all_errors])
           allow(commit_lint.git).to receive(:commits).and_return([commit])
 
           commit_lint.check disable: :all
@@ -149,6 +157,8 @@ module Danger
     end
 
     describe 'warn configuration' do
+      let(:commit) { double(:commit, message: message) }
+
       context 'with individual checks' do
         context 'with invalid messages' do
           it 'warns instead of failing' do
@@ -173,6 +183,8 @@ module Danger
         end
 
         context 'with valid messages' do
+          let(:message) { TEST_MESSAGES[:valid] }
+
           it 'does nothing' do
             checks = {
               subject_length: SubjectLengthCheck::MESSAGE,
@@ -182,7 +194,6 @@ module Danger
 
             for (check, _) in checks
               commit_lint = testing_dangerfile.commit_lint
-              commit = double(:commit, message: TEST_MESSAGES[:valid])
               allow(commit_lint.git).to receive(:commits).and_return([commit])
 
               commit_lint.check warn: [check]
@@ -196,9 +207,10 @@ module Danger
 
       context 'with all checks' do
         context 'with all errors' do
+          let(:message) { TEST_MESSAGES[:all_errors] }
+
           it 'warns instead of failing' do
             commit_lint = testing_dangerfile.commit_lint
-            commit = double(:commit, message: TEST_MESSAGES[:all_errors])
             allow(commit_lint.git).to receive(:commits).and_return([commit])
 
             commit_lint.check warn: :all
@@ -215,9 +227,10 @@ module Danger
         end
 
         context 'with a valid message' do
+          let(:message) { TEST_MESSAGES[:valid] }
+
           it 'does nothing' do
             commit_lint = testing_dangerfile.commit_lint
-            commit = double(:commit, message: TEST_MESSAGES[:valid])
             allow(commit_lint.git).to receive(:commits).and_return([commit])
 
             commit_lint.check warn: :all
@@ -230,6 +243,8 @@ module Danger
     end
 
     describe 'fail configuration' do
+      let(:commit) { double(:commit, message: message) }
+
       context 'with individual checks' do
         context 'with invalid messages' do
           it 'fails those checks' do
@@ -254,6 +269,8 @@ module Danger
         end
 
         context 'with valid messages' do
+          let(:message) { TEST_MESSAGES[:valid] }
+
           it 'does nothing' do
             checks = {
               subject_length: SubjectLengthCheck::MESSAGE,
@@ -263,7 +280,6 @@ module Danger
 
             for (check, _) in checks
               commit_lint = testing_dangerfile.commit_lint
-              commit = double(:commit, message: TEST_MESSAGES[:valid])
               allow(commit_lint.git).to receive(:commits).and_return([commit])
 
               commit_lint.check fail: [check]
@@ -277,9 +293,10 @@ module Danger
 
       context 'with all checks' do
         context 'with all errors' do
+          let(:message) { TEST_MESSAGES[:all_errors] }
+
           it 'fails those checks' do
             commit_lint = testing_dangerfile.commit_lint
-            commit = double(:commit, message: TEST_MESSAGES[:all_errors])
             allow(commit_lint.git).to receive(:commits).and_return([commit])
 
             commit_lint.check fail: :all
@@ -296,9 +313,10 @@ module Danger
         end
 
         context 'with a valid message' do
+          let(:message) { TEST_MESSAGES[:valid] }
+
           it 'does nothing' do
             commit_lint = testing_dangerfile.commit_lint
-            commit = double(:commit, message: TEST_MESSAGES[:valid])
             allow(commit_lint.git).to receive(:commits).and_return([commit])
 
             commit_lint.check fail: :all
