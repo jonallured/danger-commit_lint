@@ -4,6 +4,7 @@ require File.expand_path('../spec_helper', __FILE__)
 
 TEST_MESSAGES = {
   subject_cap: 'this subject needs a capital',
+  subject_words: 'Fixed',
   subject_length: 'This is a really long subject line and should result in an error',
   subject_period: 'This subject line ends in a period.',
   empty_line: "This subject line is fine\nBut then I forgot the empty line separating the subject and the body.",
@@ -39,6 +40,7 @@ module Danger
         it 'fails those checks' do
           checks = {
             subject_cap: SubjectCapCheck::MESSAGE,
+            subject_words: SubjectWordsCheck::MESSAGE,
             subject_length: SubjectLengthCheck::MESSAGE,
             subject_period: SubjectPeriodCheck::MESSAGE,
             empty_line: EmptyLineCheck::MESSAGE
@@ -142,7 +144,11 @@ module Danger
           allow(commit_lint.git).to receive(:commits).and_return([commit])
 
           all_checks = [
-            :subject_cap, :subject_length, :subject_period, :empty_line
+            :subject_cap,
+            :subject_words,
+            :subject_length,
+            :subject_period,
+            :empty_line
           ]
           commit_lint.check disable: all_checks
 

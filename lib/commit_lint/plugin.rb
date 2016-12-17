@@ -5,6 +5,7 @@ module Danger
   #  true:
   #
   #  * Commit subject begins with a capital letter (`subject_cap`)
+  #  * Commit subject is more than one word (`subject_word`)
   #  * Commit subject is no longer than 50 characters (`subject_length`)
   #  * Commit subject does not end in a period (`subject_period`)
   #  * Commit subject and body are separated by an empty line (`empty_line`)
@@ -41,6 +42,7 @@ module Danger
     #  The current check types are:
     #
     #  * `subject_cap`
+    #  * `subject_word`
     #  * `subject_length`
     #  * `subject_period`
     #  * `empty_line`
@@ -76,7 +78,13 @@ module Danger
     end
 
     def checkers
-      [SubjectCapCheck, SubjectLengthCheck, SubjectPeriodCheck, EmptyLineCheck]
+      [
+        SubjectCapCheck,
+        SubjectWordsCheck,
+        SubjectLengthCheck,
+        SubjectPeriodCheck,
+        EmptyLineCheck
+      ]
     end
 
     def checks
