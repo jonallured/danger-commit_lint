@@ -28,7 +28,12 @@ module Danger
     end
 
     describe 'check without configuration' do
-      let(:commit) { double(:commit, message: message) }
+      let(:sha) { '1234567' }
+      let(:commit) { double(:commit, message: message, sha: sha) }
+
+      def message_with_sha(message)
+        [message, sha].join "\n"
+      end
 
       context 'with invalid messages' do
         it 'fails those checks' do
@@ -41,14 +46,16 @@ module Danger
 
           for (check, warning) in checks
             commit_lint = testing_dangerfile.commit_lint
-            commit = double(:commit, message: TEST_MESSAGES[check])
+            commit = double(:commit, message: TEST_MESSAGES[check], sha: sha)
             allow(commit_lint.git).to receive(:commits).and_return([commit])
 
             commit_lint.check
 
             status_report = commit_lint.status_report
             expect(report_counts(status_report)).to eq 1
-            expect(status_report[:errors]).to eq [warning]
+            expect(status_report[:errors]).to eq [
+              message_with_sha(warning)
+            ]
           end
         end
       end
@@ -65,10 +72,10 @@ module Danger
           status_report = commit_lint.status_report
           expect(report_counts(status_report)).to eq 4
           expect(status_report[:errors]).to eq [
-            SubjectCapCheck::MESSAGE,
-            SubjectLengthCheck::MESSAGE,
-            SubjectPeriodCheck::MESSAGE,
-            EmptyLineCheck::MESSAGE
+            message_with_sha(SubjectCapCheck::MESSAGE),
+            message_with_sha(SubjectLengthCheck::MESSAGE),
+            message_with_sha(SubjectPeriodCheck::MESSAGE),
+            message_with_sha(EmptyLineCheck::MESSAGE)
           ]
         end
       end
@@ -97,7 +104,12 @@ module Danger
     end
 
     describe 'disable configuration' do
-      let(:commit) { double(:commit, message: message) }
+      let(:sha) { '1234567' }
+      let(:commit) { double(:commit, message: message, sha: sha) }
+
+      def message_with_sha(message)
+        [message, sha].join "\n"
+      end
 
       context 'with individual checks' do
         context 'with invalid messages' do
@@ -110,7 +122,7 @@ module Danger
 
             for (check, _) in checks
               commit_lint = testing_dangerfile.commit_lint
-              commit = double(:commit, message: TEST_MESSAGES[check])
+              commit = double(:commit, message: TEST_MESSAGES[check], sha: sha)
               allow(commit_lint.git).to receive(:commits).and_return([commit])
 
               commit_lint.check disable: [check]
@@ -157,7 +169,12 @@ module Danger
     end
 
     describe 'warn configuration' do
-      let(:commit) { double(:commit, message: message) }
+      let(:sha) { '1234567' }
+      let(:commit) { double(:commit, message: message, sha: sha) }
+
+      def message_with_sha(message)
+        [message, sha].join "\n"
+      end
 
       context 'with individual checks' do
         context 'with invalid messages' do
@@ -170,14 +187,16 @@ module Danger
 
             for (check, warning) in checks
               commit_lint = testing_dangerfile.commit_lint
-              commit = double(:commit, message: TEST_MESSAGES[check])
+              commit = double(:commit, message: TEST_MESSAGES[check], sha: sha)
               allow(commit_lint.git).to receive(:commits).and_return([commit])
 
               commit_lint.check warn: [check]
 
               status_report = commit_lint.status_report
               expect(report_counts(status_report)).to eq 1
-              expect(status_report[:warnings]).to eq [warning]
+              expect(status_report[:warnings]).to eq [
+                message_with_sha(warning)
+              ]
             end
           end
         end
@@ -218,10 +237,10 @@ module Danger
             status_report = commit_lint.status_report
             expect(report_counts(status_report)).to eq 4
             expect(status_report[:warnings]).to eq [
-              SubjectCapCheck::MESSAGE,
-              SubjectLengthCheck::MESSAGE,
-              SubjectPeriodCheck::MESSAGE,
-              EmptyLineCheck::MESSAGE
+              message_with_sha(SubjectCapCheck::MESSAGE),
+              message_with_sha(SubjectLengthCheck::MESSAGE),
+              message_with_sha(SubjectPeriodCheck::MESSAGE),
+              message_with_sha(EmptyLineCheck::MESSAGE)
             ]
           end
         end
@@ -243,7 +262,12 @@ module Danger
     end
 
     describe 'fail configuration' do
-      let(:commit) { double(:commit, message: message) }
+      let(:sha) { '1234567' }
+      let(:commit) { double(:commit, message: message, sha: sha) }
+
+      def message_with_sha(message)
+        [message, sha].join "\n"
+      end
 
       context 'with individual checks' do
         context 'with invalid messages' do
@@ -256,14 +280,16 @@ module Danger
 
             for (check, warning) in checks
               commit_lint = testing_dangerfile.commit_lint
-              commit = double(:commit, message: TEST_MESSAGES[check])
+              commit = double(:commit, message: TEST_MESSAGES[check], sha: sha)
               allow(commit_lint.git).to receive(:commits).and_return([commit])
 
               commit_lint.check fail: [check]
 
               status_report = commit_lint.status_report
               expect(report_counts(status_report)).to eq 1
-              expect(status_report[:errors]).to eq [warning]
+              expect(status_report[:errors]).to eq [
+                message_with_sha(warning)
+              ]
             end
           end
         end
@@ -304,10 +330,10 @@ module Danger
             status_report = commit_lint.status_report
             expect(report_counts(status_report)).to eq 4
             expect(status_report[:errors]).to eq [
-              SubjectCapCheck::MESSAGE,
-              SubjectLengthCheck::MESSAGE,
-              SubjectPeriodCheck::MESSAGE,
-              EmptyLineCheck::MESSAGE
+              message_with_sha(SubjectCapCheck::MESSAGE),
+              message_with_sha(SubjectLengthCheck::MESSAGE),
+              message_with_sha(SubjectPeriodCheck::MESSAGE),
+              message_with_sha(EmptyLineCheck::MESSAGE)
             ]
           end
         end

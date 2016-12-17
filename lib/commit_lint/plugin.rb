@@ -66,11 +66,11 @@ module Danger
     def check_messages
       for message in messages
         for klass in warning_checkers
-          issue_warning klass::MESSAGE if klass.fail? message
+          issue_warning(klass::MESSAGE, message[:sha]) if klass.fail? message
         end
 
         for klass in failing_checkers
-          issue_failure klass::MESSAGE if klass.fail? message
+          issue_failure(klass::MESSAGE, message[:sha]) if klass.fail? message
         end
       end
     end
@@ -111,16 +111,20 @@ module Danger
     def messages
       git.commits.map do |commit|
         (subject, empty_line) = commit.message.split("\n")
-        { subject: subject, empty_line: empty_line }
+        {
+          subject: subject,
+          empty_line: empty_line,
+          sha: commit.sha
+        }
       end
     end
 
-    def issue_warning(message)
-      messaging.warn message
+    def issue_warning(message, sha)
+      messaging.warn [message, sha].join("\n")
     end
 
-    def issue_failure(message)
-      messaging.fail message
+    def issue_failure(message, sha)
+      messaging.fail [message, sha].join("\n")
     end
   end
 end
