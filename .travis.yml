@@ -10,6 +10,7 @@ rvm:
 
 script:
   - bundle exec rake
+  - bundle exec danger
 
 notifications:
   email: false
