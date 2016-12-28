@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog][keep] and this project adheres to
 
 ## [Unreleased]
 
+[Unreleased]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.5...master
+
+## [0.0.5] - 2016-12-28
+
 ### Added
 
 * Add Ruby 2.4 to Travis [1aa9cff][1aa9cff]
@@ -22,7 +26,7 @@ The format is based on [Keep a Changelog][keep] and this project adheres to
 
 * Drop Ruby 2.2 from Travis [1aa9cff][1aa9cff]
 
-[Unreleased]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.4...master
+[0.0.5]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.4...0.0.5
 [1aa9cff]: https://github.com/jonallured/danger-commit_lint/commit/1aa9cff
 [51c597a]: https://github.com/jonallured/danger-commit_lint/commit/51c597a
 [35044ae]: https://github.com/jonallured/danger-commit_lint/commit/35044ae
