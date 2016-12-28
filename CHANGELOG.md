@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog][keep] and this project adheres to
 
 * Drop Ruby 2.2 from Travis [1aa9cff][1aa9cff]
 
-[0.0.5]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.4...0.0.5
+[0.0.5]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.4...v0.0.5
 [1aa9cff]: https://github.com/jonallured/danger-commit_lint/commit/1aa9cff
 [51c597a]: https://github.com/jonallured/danger-commit_lint/commit/51c597a
 [35044ae]: https://github.com/jonallured/danger-commit_lint/commit/35044ae
