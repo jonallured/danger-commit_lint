@@ -69,3 +69,29 @@ commit_lint.check disable: :all
 ```
 
 This will actually throw a warning that Commit Lint isn't doing anything.
+
+## Fixing Violations
+
+If you have a commit that has violated these rules, you might be unsure how to
+fix it. Or maybe you're unsure how to update the Pull Request. The Pro Git book
+has a great chapter about [Rewriting History][rewrite_history], I would highly
+recommend investing some time with that one. Here are some quick tips that might
+help too:
+
+* `git commit --amend` will allow you to edit the message of the last commit you
+  made. For most people this is what you want.
+
+* `git rebase -i master` is a little more fancy, but can solve almost any other
+  issue you might be up against. I'm assuming you have used a topic branch and
+  that's why the `master` argument is in the command, YMMV. Once in the interact
+  view, simply move to the commit that's in violation and use `r` for `reword`.
+  Use this approach when you have a commit right in the middle of your work that
+  needs to be updated.
+
+After you've fixed your commit messages with commands like these, you'll still
+need to update the PR. Most of the time, this is as easy as force pushing to the
+topic branch your PR is based on. GitHub then magically updates the PR and all
+is well with the world. Yes, I'm advising you force push, but you have to when
+you change history - be careful and stay safe out there!
+
+[rewrite_history]: https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History
