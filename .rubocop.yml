@@ -3,3 +3,7 @@ Style/FrozenStringLiteralComment:
 
 Style/For:
   EnforcedStyle: for
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'

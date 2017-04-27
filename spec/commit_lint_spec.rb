@@ -143,12 +143,12 @@ module Danger
           commit_lint = testing_dangerfile.commit_lint
           allow(commit_lint.git).to receive(:commits).and_return([commit])
 
-          all_checks = [
-            :subject_cap,
-            :subject_words,
-            :subject_length,
-            :subject_period,
-            :empty_line
+          all_checks = %i[
+            subject_cap
+            subject_words
+            subject_length
+            subject_period
+            empty_line
           ]
           commit_lint.check disable: all_checks
 
