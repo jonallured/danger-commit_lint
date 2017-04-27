@@ -10,7 +10,16 @@ The format is based on [Keep a Changelog][keep] and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.5...master
+[Unreleased]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.6...master
+
+## [0.0.6] - 2017-04-27
+
+### Changed
+
+* Upgrade to newest Danger [480a4e6][480a4e6]
+
+[0.0.6]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.5...v0.0.6
+[480a4e6]: https://github.com/jonallured/danger-commit_lint/commit/480a4e6
 
 ## [0.0.5] - 2016-12-28
 
