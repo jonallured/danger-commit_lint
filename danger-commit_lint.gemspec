@@ -20,10 +20,10 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'danger', '~> 5.0'
 
-  spec.add_development_dependency 'bundler', '~> 1.3'
+  spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec', '~> 3.4'
-  spec.add_development_dependency "rubocop", "~> 0.41"
-  spec.add_development_dependency "yard", "~> 0.8"
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'yard'
   spec.add_development_dependency 'pry'
 end
