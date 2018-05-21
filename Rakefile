@@ -4,7 +4,7 @@ require 'rubocop/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
 
-task default: [:spec, :rubocop, :spec_docs]
+task default: %i[rubocop spec spec_docs]
 
 desc 'Run RuboCop on the lib/specs directory'
 RuboCop::RakeTask.new(:rubocop) do |task|
