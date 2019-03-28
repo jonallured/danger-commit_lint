@@ -113,6 +113,7 @@ module Danger
 
     def warning_checks
       return checks if @config[:warn] == :all
+
       @config[:warn] || []
     end
 
