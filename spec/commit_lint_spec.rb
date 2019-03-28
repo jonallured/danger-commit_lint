@@ -9,7 +9,7 @@ TEST_MESSAGES = {
   subject_period: 'This subject line ends in a period.',
   empty_line: "This subject line is fine\nBut then I forgot the empty line separating the subject and the body.",
   all_errors: "this is a really long subject and it even ends in a period.\nNot to mention the missing empty line!",
-  valid:  "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain."
+  valid: "This is a valid message\n\nYou can tell because it meets all the criteria and the linter does not complain."
 }.freeze
 
 # rubocop:enable Metrics/LineLength
