@@ -10,7 +10,22 @@ The format is based on [Keep a Changelog][keep] and this project adheres to
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.6...master
+[Unreleased]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.7...master
+
+## [0.0.7] - 2019-03-29
+
+### Changed
+
+* Ignore git generated subject in commit messages [#21][]
+* Express danger plugin dependency in terms of plugin api [#24][]
+
+[0.0.7]: https://github.com/jonallured/danger-commit_lint/compare/v0.0.6...v0.0.7
+[#21]: https://github.com/jonallured/danger-commit_lint/pull/21
+[#24]: https://github.com/jonallured/danger-commit_lint/pull/24
+
+### Removed
+
+* Drop Ruby 2.3 from Travis [1aa9cff][1aa9cff]
 
 ## [0.0.6] - 2017-04-27
 
