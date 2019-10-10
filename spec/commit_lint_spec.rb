@@ -103,6 +103,28 @@ module Danger
           end
         end
       end
+
+      context 'with repeated bad messages' do
+        let(:commits) do
+          [
+            double(:commit, message: TEST_MESSAGES[:subject_cap], sha: 'sha1'),
+            double(:commit, message: TEST_MESSAGES[:subject_cap], sha: 'sha2')
+          ]
+        end
+
+        it 'fails are grouped' do
+          commit_lint = testing_dangerfile.commit_lint
+          allow(commit_lint.git).to receive(:commits).and_return(commits)
+
+          commit_lint.check
+
+          status_report = commit_lint.status_report
+          expect(report_counts(status_report)).to eq 1
+          expect(status_report[:errors]).to eq [
+            SubjectCapCheck::MESSAGE + "\n" + 'sha1' + "\n" + 'sha2'
+          ]
+        end
+      end
     end
 
     describe 'disable configuration' do
@@ -264,6 +286,28 @@ module Danger
             expect(report_counts(status_report)).to eq 0
           end
         end
+
+        context 'with repeated bad messages' do
+          let(:commits) do
+            [
+              double(:commit, message: TEST_MESSAGES[:empty_line], sha: 'sha1'),
+              double(:commit, message: TEST_MESSAGES[:empty_line], sha: 'sha2')
+            ]
+          end
+
+          it 'warnings are grouped' do
+            commit_lint = testing_dangerfile.commit_lint
+            allow(commit_lint.git).to receive(:commits).and_return(commits)
+
+            commit_lint.check warn: :all
+
+            status_report = commit_lint.status_report
+            expect(report_counts(status_report)).to eq 1
+            expect(status_report[:warnings]).to eq [
+              EmptyLineCheck::MESSAGE + "\n" + 'sha1' + "\n" + 'sha2'
+            ]
+          end
+        end
       end
     end
 
@@ -355,6 +399,28 @@ module Danger
 
             status_report = commit_lint.status_report
             expect(report_counts(status_report)).to eq 0
+          end
+        end
+
+        context 'with repeated bad messages' do
+          let(:commits) do
+            [
+              double(:commit, message: TEST_MESSAGES[:empty_line], sha: 'sha1'),
+              double(:commit, message: TEST_MESSAGES[:empty_line], sha: 'sha2')
+            ]
+          end
+
+          it 'warnings are grouped' do
+            commit_lint = testing_dangerfile.commit_lint
+            allow(commit_lint.git).to receive(:commits).and_return(commits)
+
+            commit_lint.check fail: :all
+
+            status_report = commit_lint.status_report
+            expect(report_counts(status_report)).to eq 1
+            expect(status_report[:errors]).to eq [
+              EmptyLineCheck::MESSAGE + "\n" + 'sha1' + "\n" + 'sha2'
+            ]
           end
         end
       end
