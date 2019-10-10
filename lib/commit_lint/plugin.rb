@@ -66,15 +66,19 @@ module Danger
     private
 
     def check_messages
-      for message in messages
-        for klass in warning_checkers
-          issue_warning(klass::MESSAGE, message[:sha]) if klass.fail? message
-        end
-
-        for klass in failing_checkers
-          issue_failure(klass::MESSAGE, message[:sha]) if klass.fail? message
-        end
+      for klass in warning_checkers
+        warning_shas = failed_shas(klass)
+        issue_warning(klass::MESSAGE, warning_shas) unless warning_shas.empty?
       end
+
+      for klass in failing_checkers
+        failure_shas = failed_shas(klass)
+        issue_failure(klass::MESSAGE, failure_shas) unless failure_shas.empty?
+        end
+    end
+
+    def failed_shas(klass)
+      messages.map { |message| message[:sha] if klass.fail? message }.compact
     end
 
     def checkers
@@ -128,12 +132,12 @@ module Danger
       end
     end
 
-    def issue_warning(message, sha)
-      messaging.warn [message, sha].join("\n")
+    def issue_warning(message, shas)
+      messaging.warn(([message] + shas).join("\n"))
     end
 
-    def issue_failure(message, sha)
-      messaging.fail [message, sha].join("\n")
+    def issue_failure(message, shas)
+      messaging.fail(([message] + shas).join("\n"))
     end
   end
 end
