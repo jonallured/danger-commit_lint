@@ -1,7 +1,7 @@
 module Danger
   class DangerCommitLint < Plugin
     class SubjectCapCheck < CommitCheck # :nodoc:
-      MESSAGE = 'Please start subject with capital letter.'.freeze
+      MESSAGE = 'Please start commit message subject with capital letter.'.freeze
 
       def self.type
         :subject_cap

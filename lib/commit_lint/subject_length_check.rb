@@ -1,7 +1,7 @@
 module Danger
   class DangerCommitLint < Plugin
     class SubjectLengthCheck < CommitCheck # :nodoc:
-      MESSAGE = 'Please limit commit subject line to 50 characters.'.freeze
+      MESSAGE = 'Please limit commit message subject line to 50 characters.'.freeze
       GIT_GENERATED_SUBJECT = /^Merge branch \'.+\' into\ /.freeze
       GITHUB_GENERATED_SUBJECT = /^Merge pull request #\d+ from\ /.freeze
 
