@@ -1,7 +1,7 @@
 module Danger
   class DangerCommitLint < Plugin
     class EmptyLineCheck < CommitCheck # :nodoc:
-      MESSAGE = 'Please separate subject from body with newline.'.freeze
+      MESSAGE = 'Please separate commit message subject from body with newline.'.freeze
 
       def self.type
         :empty_line

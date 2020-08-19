@@ -1,7 +1,7 @@
 module Danger
   class DangerCommitLint < Plugin
     class SubjectWordsCheck < CommitCheck # :nodoc:
-      MESSAGE = 'Please use more than one word.'.freeze
+      MESSAGE = 'Please use more than one word in commit message.'.freeze
 
       def self.type
         :subject_words
