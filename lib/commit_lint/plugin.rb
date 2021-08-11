@@ -129,7 +129,7 @@ module Danger
     def messages
       return parsed_messages if commit_limit.zero?
 
-      parsed_messages.first(commit_limit)
+      parsed_messages.last(commit_limit)
     end
 
     def parsed_messages
