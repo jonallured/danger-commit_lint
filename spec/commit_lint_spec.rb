@@ -311,6 +311,48 @@ module Danger
       end
     end
 
+    describe 'limit configuration' do
+      let(:sha1) { '1111111' }
+      let(:commit1) { double(:commit, message: message, sha: sha) }
+
+      let(:sha2) { '2222222' }
+      let(:commit2) { double(:commit, message: message, sha: sha) }
+
+      let(:sha3) { '3333333' }
+      let(:commit3) { double(:commit, message: message, sha: sha) }
+
+      def message_with_sha(message)
+        [message, sha1, sha2].join "\n"
+      end
+
+      it 'fails checks only on messages within limit' do
+        checks = {
+          subject_cap: SubjectCapCheck::MESSAGE,
+          subject_words: SubjectWordsCheck::MESSAGE,
+          subject_length: SubjectLengthCheck::MESSAGE,
+          subject_period: SubjectPeriodCheck::MESSAGE,
+          empty_line: EmptyLineCheck::MESSAGE
+        }
+
+        for (check, warning) in checks
+          commit_lint = testing_dangerfile.commit_lint
+          commit1 = double(:commit, message: TEST_MESSAGES[check], sha: sha1)
+          commit2 = double(:commit, message: TEST_MESSAGES[check], sha: sha2)
+          commit3 = double(:commit, message: TEST_MESSAGES[check], sha: sha3)
+          commits = [commit1, commit2, commit3]
+          allow(commit_lint.git).to receive(:commits).and_return(commits)
+
+          commit_lint.check limit: 2
+
+          status_report = commit_lint.status_report
+          expect(report_counts(status_report)).to eq 1
+          expect(status_report[:errors]).to eq [
+            message_with_sha(warning)
+          ]
+        end
+      end
+    end
+
     describe 'fail configuration' do
       let(:sha) { '1234567' }
       let(:commit) { double(:commit, message: message, sha: sha) }

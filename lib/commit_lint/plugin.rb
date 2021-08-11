@@ -38,6 +38,7 @@ module Danger
     #  * `disable` - array of checks to skip
     #  * `fail` - array of checks to fail on
     #  * `warn` - array of checks to warn on
+    #  * `limit` - limits checks to first N commits
     #
     #  The current check types are:
     #
@@ -121,7 +122,17 @@ module Danger
       @config[:warn] || []
     end
 
+    def commit_limit
+      @config[:limit] || 0
+    end
+
     def messages
+      return parsed_messages if commit_limit.zero?
+
+      parsed_messages.first(commit_limit)
+    end
+
+    def parsed_messages
       git.commits.map do |commit|
         (subject, empty_line) = commit.message.split("\n")
         {
