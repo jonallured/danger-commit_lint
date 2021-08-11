@@ -37,14 +37,15 @@ By default, Commit Lint fails, but you can configure this behavior.
 
 ## Configuration
 
-Configuring Commit Lint is done by passing a hash. The three keys that can be
+Configuring Commit Lint is done by passing a hash. The four keys that can be
 passed are:
 
 * `disable`
 * `fail`
 * `warn`
+* `limit`
 
-To each of these keys you can pass either the symbol `:all` or an array of
+The first three of these keys can accept either the symbol `:all` or an array of
 checks. Here are some ways you could configure Commit Lint:
 
 ```ruby
@@ -69,3 +70,16 @@ commit_lint.check disable: :all
 ```
 
 This will actually throw a warning that Commit Lint isn't doing anything.
+
+
+### Limiting number of commits checked
+
+The `limit` key allows you to limit checks to the first `n` commits. This can be
+useful for PR workflows when squashing before merge where you want the initial
+commit message to be linted, but want to exclude additional commits pushed in
+response to change requests during a code review.
+
+```ruby
+# limit checks to only the first commit
+commit_lint.check limit: 1
+```
