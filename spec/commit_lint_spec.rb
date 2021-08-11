@@ -322,7 +322,7 @@ module Danger
       let(:commit3) { double(:commit, message: message, sha: sha) }
 
       def message_with_sha(message)
-        [message, sha1, sha2].join "\n"
+        [message, sha2, sha3].join "\n"
       end
 
       it 'fails checks only on messages within limit' do

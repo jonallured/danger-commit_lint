@@ -71,15 +71,14 @@ commit_lint.check disable: :all
 
 This will actually throw a warning that Commit Lint isn't doing anything.
 
-
 ### Limiting number of commits checked
 
-The `limit` key allows you to limit checks to the first `n` commits. This can be
-useful for PR workflows when squashing before merge where you want the initial
-commit message to be linted, but want to exclude additional commits pushed in
-response to change requests during a code review.
+The `limit` key allows you to limit checks to the first `n` commits (oldest to
+newest). This can be useful for PR workflows when squashing before merge where
+you want the initial commit message to be linted, but want to exclude additional
+commits pushed in response to change requests during a code review.
 
 ```ruby
-# limit checks to only the first commit
+# limit checks to only the first (oldest) commit
 commit_lint.check limit: 1
 ```
